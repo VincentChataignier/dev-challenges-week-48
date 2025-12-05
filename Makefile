@@ -1,7 +1,13 @@
-.PHONY: tests functional-tests
+.PHONY: build-asm tests unit-tests functional-tests
 
-tests:
+build-asm:
+	docker build -t gift-asm asm/
+
+tests: build-asm
 	php bin/phpunit --testdox
 
-functional-tests:
+unit-tests:
+	php bin/phpunit --group unit --testdox
+
+functional-tests: build-asm
 	php bin/phpunit --group functional --testdox

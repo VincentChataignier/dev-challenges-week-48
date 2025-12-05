@@ -17,7 +17,7 @@ class AsmCoreExecutorTest extends TestCase
     #[Test]
     public function testExecuteThrowsExceptionWhenBinaryNotFound(): void
     {
-        $executor = new AsmCoreExecutor('/nonexistent/path/to/binary');
+        $executor = new AsmCoreExecutor('nonexistent/path/to/binary', '/tmp');
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('ASM binary not found or not executable');
@@ -28,8 +28,8 @@ class AsmCoreExecutorTest extends TestCase
     #[Test]
     public function testExecuteThrowsExceptionWhenBinaryNotExecutable(): void
     {
-        // use existing file
-        $executor = new AsmCoreExecutor(__FILE__);
+        // use existing file (relative to empty project dir)
+        $executor = new AsmCoreExecutor(__FILE__, '');
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('ASM binary not found or not executable');
@@ -114,7 +114,7 @@ class AsmCoreExecutorTest extends TestCase
         $processMock->method('getErrorOutput')->willReturn($errorOutput);
 
         $executor = $this->getMockBuilder(AsmCoreExecutor::class)
-            ->setConstructorArgs(['/fake/binary'])
+            ->setConstructorArgs(['fake/binary', '/tmp'])
             ->onlyMethods(['createProcess', 'isBinaryExecutable'])
             ->getMock();
 

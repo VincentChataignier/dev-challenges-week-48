@@ -10,16 +10,21 @@ use Symfony\Component\Process\Process;
 
 class AsmCoreExecutor implements CoreExecutorInterface
 {
+    private readonly string $absoluteBinaryPath;
+
     public function __construct(
         #[Autowire(env: 'GIFT_ASM_BINARY_PATH')]
-        private readonly string $binaryPath,
+        string $binaryPath,
+        #[Autowire('%kernel.project_dir%')]
+        string $projectDir,
     ) {
+        $this->absoluteBinaryPath = $projectDir . '/' . $binaryPath;
     }
 
     public function execute(?string $input = null): CoreResult
     {
         if (!$this->isBinaryExecutable()) {
-            throw new RuntimeException(sprintf('ASM binary not found or not executable: %s', $this->binaryPath));
+            throw new RuntimeException(sprintf('ASM binary not found or not executable: %s', $this->absoluteBinaryPath));
         }
 
         $process = $this->createProcess();
@@ -44,11 +49,11 @@ class AsmCoreExecutor implements CoreExecutorInterface
 
     protected function createProcess(): Process
     {
-        return new Process([$this->binaryPath]);
+        return new Process([$this->absoluteBinaryPath]);
     }
 
     protected function isBinaryExecutable(): bool
     {
-        return is_executable($this->binaryPath);
+        return is_executable($this->absoluteBinaryPath);
     }
 }
