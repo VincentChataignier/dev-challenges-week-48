@@ -1,16 +1,20 @@
-FROM debian:bookworm-slim
+FROM --platform=linux/amd64 debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nasm \
     binutils \
+    make \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY gift_core.asm *.inc ./
+# Copy directory structure
+COPY Makefile ./
+COPY include/ ./include/
+COPY lib/ ./lib/
+COPY src/ ./src/
 
-RUN nasm -felf64 gift_core.asm -o gift_core.o && \
-    ld -o gift_core gift_core.o && \
-    chmod +x gift_core
+# Build using Makefile
+RUN make && chmod +x gift_core
 
 CMD ["./gift_core"]
