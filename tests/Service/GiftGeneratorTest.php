@@ -20,10 +20,10 @@ class GiftGeneratorTest extends TestCase
     {
         $expectedOutput = '{"ideas":["Cadeau 1","Cadeau 2","Cadeau 3","Cadeau 4","Cadeau 5"]}';
 
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::success($expectedOutput));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::success($expectedOutput));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
         $result = $generator->generateGifts('{"age":33,"interests":"jeux video"}');
 
         $this->assertJson($result);
@@ -37,10 +37,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsExceptionOnInvalidJson(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::inputError('Invalid JSON input'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::inputError('Invalid JSON input'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(GiftValidationException::class);
         $this->expectExceptionMessage('Invalid JSON input');
@@ -51,10 +51,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsExceptionOnMissingAge(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(GiftValidationException::class);
 
@@ -64,10 +64,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsExceptionOnInvalidAge(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(GiftValidationException::class);
 
@@ -77,10 +77,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsExceptionOnMissingInterests(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(GiftValidationException::class);
 
@@ -90,10 +90,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsExceptionOnEmptyInterests(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::runtimeError('Invalid data (age or interests)'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(GiftValidationException::class);
 
@@ -103,10 +103,10 @@ class GiftGeneratorTest extends TestCase
     #[Test]
     public function testGenerateGiftsThrowsRuntimeExceptionOnCrash(): void
     {
-        $mockExecutor = $this->createMock(CoreExecutorInterface::class);
-        $mockExecutor->method('execute')->willReturn(CoreResult::crash(139, 'Segmentation fault'));
+        $stubExecutor = $this->createStub(CoreExecutorInterface::class);
+        $stubExecutor->method('execute')->willReturn(CoreResult::crash(139, 'Segmentation fault'));
 
-        $generator = new GiftGenerator($mockExecutor);
+        $generator = new GiftGenerator($stubExecutor);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Core crashed with exit code 139');

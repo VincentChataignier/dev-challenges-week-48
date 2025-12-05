@@ -107,19 +107,19 @@ class AsmCoreExecutorTest extends TestCase
 
     private function createPartialMockExecutor(int $exitCode, string $output, string $errorOutput): AsmCoreExecutor
     {
-        $processMock = $this->createMock(Process::class);
-        $processMock->method('run')->willReturn(0);
-        $processMock->method('getExitCode')->willReturn($exitCode);
-        $processMock->method('getOutput')->willReturn($output);
-        $processMock->method('getErrorOutput')->willReturn($errorOutput);
+        $processStub = $this->createStub(Process::class);
+        $processStub->method('run')->willReturn(0);
+        $processStub->method('getExitCode')->willReturn($exitCode);
+        $processStub->method('getOutput')->willReturn($output);
+        $processStub->method('getErrorOutput')->willReturn($errorOutput);
 
         $executor = $this->getMockBuilder(AsmCoreExecutor::class)
             ->setConstructorArgs(['fake/binary', '/tmp'])
             ->onlyMethods(['createProcess', 'isBinaryExecutable'])
             ->getMock();
 
-        $executor->method('isBinaryExecutable')->willReturn(true);
-        $executor->method('createProcess')->willReturn($processMock);
+        $executor->expects($this->once())->method('isBinaryExecutable')->willReturn(true);
+        $executor->expects($this->once())->method('createProcess')->willReturn($processStub);
 
         return $executor;
     }

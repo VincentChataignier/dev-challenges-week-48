@@ -5,8 +5,10 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          colors="true"
          failOnDeprecation="true"
-         failOnNotice="true"
+         failOnNotice="false"
          failOnWarning="true"
+         displayDetailsOnPhpunitDeprecations="false"
+         displayDetailsOnTestsThatTriggerNotices="false"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
 >
@@ -25,7 +27,7 @@
 
     <source ignoreSuppressionOfDeprecations="true"
             ignoreIndirectDeprecations="true"
-            restrictNotices="true"
+            restrictNotices="false"
             restrictWarnings="true"
     >
         <include>

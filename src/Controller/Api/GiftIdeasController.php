@@ -22,7 +22,8 @@ class GiftIdeasController extends AbstractController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $result = $this->giftGenerator->generateGifts($request->getContent());
+            $jsonPayload = $this->buildJsonPayload($request);
+            $result = $this->giftGenerator->generateGifts($jsonPayload);
 
             return new JsonResponse(
                 $result,
@@ -35,5 +36,22 @@ class GiftIdeasController extends AbstractController
         } catch (GiftValidationException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    private function buildJsonPayload(Request $request): string
+    {
+        // Si query params présents, les utiliser
+        $age       = $request->query->get('age');
+        $interests = $request->query->get('interests');
+
+        if ($age !== null && $interests !== null) {
+            return json_encode([
+                'age'       => (int) $age,
+                'interests' => $interests,
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        // Sinon, utiliser le body JSON
+        return $request->getContent();
     }
 }

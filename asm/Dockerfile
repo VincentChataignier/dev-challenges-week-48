@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 debian:bookworm-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nasm \
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY gift_core.asm .
+COPY gift_core.asm *.inc ./
 
 RUN nasm -felf64 gift_core.asm -o gift_core.o && \
     ld -o gift_core gift_core.o && \

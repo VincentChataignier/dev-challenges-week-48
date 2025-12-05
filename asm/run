@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -i --rm gift-asm
+docker run -i --rm --platform linux/amd64 --network host gift-asm
